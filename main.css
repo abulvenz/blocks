@@ -15,6 +15,7 @@ body {
 }
 
 .field {
+    cursor: pointer;
     display: grid;
     gap: var(--gap);
     width: var(--width);
@@ -24,8 +25,17 @@ body {
 }
 
 .box {
+    margin: 0;
+    padding:0;
     background-color: aquamarine;
     width:calc((var(--width) - (var(--row) - 1)* var(--gap)) / var(--row));
     height: calc((var(--height) - (var(--col) - 1) * var(--gap)) / var(--col));
     display: grid;
+    justify-content: center;
+    align-items: center;
+    font-size: calc((var(--height) - (var(--col) - 1) * var(--gap)) / var(--col) - 0.2em);
+}
+
+.red {
+    background-color: salmon;
 }
