@@ -1,0 +1,31 @@
+:root {
+    --boxsize: calc(10px);
+    --boxwidth: calc(12px * var(--row)); /* - (var(--col) - 1) * var(--gap));*/
+    --boxheight: min(10vh, 10px); /* - (var(--row) - 1) * var(--gap));*/
+}
+
+body {
+    margin: 0;
+}
+
+.container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.field {
+    display: grid;
+    gap: var(--gap);
+    width: var(--width);
+    height: var(--height);
+    grid-template-columns: repeat(var(--col), 1fr);
+    grid-template-columns: repeat(var(--row), 1fr);
+}
+
+.box {
+    background-color: aquamarine;
+    width:calc((var(--width) - (var(--row) - 1)* var(--gap)) / var(--row));
+    height: calc((var(--height) - (var(--col) - 1) * var(--gap)) / var(--col));
+    display: grid;
+}
