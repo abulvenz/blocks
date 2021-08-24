@@ -151,7 +151,6 @@ m.mount(document.body, {
                                   mines > 0 ? mines : ''
                               )
                             : '×'
-                        //                        field.value === FIELD.MINE ? 1 : ''
                     )
                 )
             ),

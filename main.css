@@ -1,8 +1,3 @@
-:root {
-    --boxsize: calc(10px);
-    --boxwidth: calc(12px * var(--row)); /* - (var(--col) - 1) * var(--gap));*/
-    --boxheight: min(10vh, 10px); /* - (var(--row) - 1) * var(--gap));*/
-}
 
 body {
     margin: 0;
@@ -26,9 +21,9 @@ body {
 
 .box {
     margin: 0;
-    padding:0;
+    padding: 0;
     background-color: aquamarine;
-    width:calc((var(--width) - (var(--row) - 1)* var(--gap)) / var(--row));
+    width: calc((var(--width) - (var(--row) - 1) * var(--gap)) / var(--row));
     height: calc((var(--height) - (var(--col) - 1) * var(--gap)) / var(--col));
     display: grid;
     justify-content: center;
