@@ -1,9 +1,9 @@
 import m from 'mithril';
-import tagl, {msline} from 'tagl-mithril';
+import tagl from 'tagl-mithril';
 
-const {h1, div, button} = tagl(m);
-const {trunc, random} = Math;
-const {freeze} = Object;
+const { h1, div, button } = tagl(m);
+const { trunc, random } = Math;
+const { freeze } = Object;
 
 const N = 15;
 const K = 10;
@@ -34,22 +34,21 @@ const coord = (idx) => ({
 });
 const idx = (p) => p.r * N + p.c;
 const onBoard = (p) => p.r >= 0 && p.c >= 0 && p.r < N && p.c < N;
-const up = (p) => ({r: p.r - 1, c: p.c + 0});
-const right = (p) => ({r: p.r + 0, c: p.c + 1});
-const left = (p) => ({r: p.r + 0, c: p.c - 1});
-const down = (p) => ({r: p.r + 1, c: p.c + 0});
+const up = (p) => ({ r: p.r - 1, c: p.c + 0 });
+const right = (p) => ({ r: p.r + 0, c: p.c + 1 });
+const left = (p) => ({ r: p.r + 0, c: p.c - 1 });
+const down = (p) => ({ r: p.r + 1, c: p.c + 0 });
 const use = (v, fn) => fn(v);
 const all =
     (...f) =>
     (p) =>
-        f.reduce((acc, v) => v(acc), p);
+    f.reduce((acc, v) => v(acc), p);
 
 const neighbors4 = (p) => [up, right, down, left].map((f) => f(p)).filter(onBoard);
 
-const neighbors = (p) =>
-    [up, all(up, right), right, all(down, right), down, all(down, left), left, all(up, left)]
-        .map((f) => f(p))
-        .filter(onBoard);
+const neighbors = (p) => [up, all(up, right), right, all(down, right), down, all(down, left), left, all(up, left)]
+    .map((f) => f(p))
+    .filter(onBoard);
 
 const FIELD = freeze({
     FREE: 0,
@@ -77,7 +76,7 @@ const initMines = (K) =>
 const game = {
     field: init(N),
     death: 0,
-    won : false,
+    won: false,
 };
 
 const contains = (arr, e) => arr.indexOf(e) >= 0;
@@ -98,11 +97,15 @@ const flood = (fidx, idxes = []) => {
 };
 
 const not = (e) => !e;
+const nMines = fidx => neighbors(coord(fidx))
+    .map(idx)
+    .filter(mine)
+    .length;
 
 const won = () =>
     range(N * N)
-        .filter(all(mine, not))
-        .filter(covered).length === 0;
+    .filter(all(mine, not))
+    .filter(covered).length === 0;
 
 const uncover = (idxes, allNeighbors = true) =>
     idxes.forEach((fidx) => [
@@ -128,8 +131,7 @@ const click = (idx) => {
 m.mount(document.body, {
     view: (vnode) =>
         div.container(
-            div.field(
-                {
+            div.field({
                     style: `
                         --width: min(90vh,90vw);
                         --height: min(90vh,90vw);
@@ -139,22 +141,20 @@ m.mount(document.body, {
                     `,
                 },
                 game.field.map((field, fidx) =>
-                    div.box[field.hidden ? 'red' : ''](
-                        {
-                            onmouseup: () => click(fidx),
-                            stsyle: `--col:${N};--row:${N};--gap:2vh;`,
-                        },
-                        covered(fidx)
-                            ? ''
-                            : !mine(fidx)
-                            ? use(neighbors(coord(fidx)).map(idx).filter(mine).length, (mines) =>
-                                  mines > 0 ? mines : ''
-                              )
-                            : '×'
-                    )
+                    use(nMines(fidx), (mines) =>
+                        div.box[field.hidden ? 'red' : ''][`col${mines}`]({
+                                onmouseup: () => click(fidx),
+                                stsyle: `--col:${N};--row:${N};--gap:2vh;`,
+                            },
+                            covered(fidx) ?
+                            '' :
+                            !mine(fidx) ?
+                            mines > 0 ? mines : '' :
+                            '×'
+                        ))
                 )
             ),
-            button({onclick: () => [(game.field = init(N)),game.won=false, initMines(K)]}, 'New'),
-            div('death', game.death,' ',game.won?'won':'')
+            button({ onclick: () => [(game.field = init(N)), game.won = false, initMines(K)] }, 'New'),
+            div('death', game.death, ' ', game.won ? 'won' : '')
         ),
 });

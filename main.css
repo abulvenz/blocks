@@ -1,12 +1,45 @@
-
 body {
     margin: 0;
+    background-color: black;
+    color: wheat;
 }
 
 .container {
     display: grid;
     justify-content: center;
     align-items: center;
+}
+
+.col1 {
+    color: blue;
+}
+
+.col2 {
+    color: green;
+}
+
+.col3 {
+    color: red;
+}
+
+.col4 {
+    color: salmon;
+}
+
+.col5 {
+    color: orchid;
+}
+
+.col6 {
+    color: black;
+}
+
+.col7 {
+    color: white;
+}
+
+.col8 {
+    color: sienna;
 }
 
 .field {
@@ -22,7 +55,7 @@ body {
 .box {
     margin: 0;
     padding: 0;
-    background-color: aquamarine;
+    background-color: rgba(184, 184, 184, .75);
     width: calc((var(--width) - (var(--row) - 1) * var(--gap)) / var(--row));
     height: calc((var(--height) - (var(--col) - 1) * var(--gap)) / var(--col));
     display: grid;
