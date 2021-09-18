@@ -1,12 +1,15 @@
 import m from 'mithril';
 import tagl from 'tagl-mithril';
 
+
 const { h1, div, button } = tagl(m);
 const { trunc, random } = Math;
 const { freeze } = Object;
 
 const N = 15;
-const K = 10;
+const K = 30;
+
+//window.addEventListener("contextmenu", e => e.preventDefault());
 
 const range = (() => {
     const r = [];
@@ -56,6 +59,7 @@ const FIELD = freeze({
 });
 
 const covered = (idx) => game.field[idx].hidden;
+const flagged = (idx) => game.field[idx].flagged;
 
 const value = (p) => neighbors(p).map(idx).filter(mine).length;
 
@@ -110,11 +114,14 @@ const won = () =>
 const uncover = (idxes, allNeighbors = true) =>
     idxes.forEach((fidx) => [
         (game.field[fidx].hidden = false),
-        allNeighbors ? neighbors4(coord(fidx)).forEach((nidx) => (game.field[idx(nidx)].hidden = false)) : null,
+        allNeighbors ? neighbors(coord(fidx)).forEach((nidx) => (game.field[idx(nidx)].hidden = false)) : null,
     ]);
 
 const click = (idx) => {
     console.log(idx);
+    if (flagged(idx)) {
+        return;
+    } else
     if (mine(idx)) {
         game.death += 1;
         uncover([idx], false);
@@ -125,6 +132,12 @@ const click = (idx) => {
     }
     if (won()) {
         game.won = true;
+    }
+};
+
+const flag = (fidx) => {
+    if (covered(fidx)) {
+        game.field[fidx].flagged = !game.field[fidx].flagged;
     }
 };
 
@@ -143,9 +156,16 @@ m.mount(document.body, {
                 game.field.map((field, fidx) =>
                     use(nMines(fidx), (mines) =>
                         div.box[field.hidden ? 'red' : ''][`col${mines}`]({
-                                onmouseup: () => click(fidx),
-                                stsyle: `--col:${N};--row:${N};--gap:2vh;`,
+                                onclick: () => click(fidx),
+                                oncontextmenu: e => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    flag(fidx);
+                                    return false;
+                                },
                             },
+                            flagged(fidx) ?
+                            '×' :
                             covered(fidx) ?
                             '' :
                             !mine(fidx) ?
